@@ -11,6 +11,9 @@ importers:
       ofetch:
         specifier: ^1.4.1
         version: 1.4.1
+      svelte-5-french-toast:
+        specifier: ^2.0.6
+        version: 2.0.6(svelte@5.41.1)
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -1415,6 +1418,11 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
+  svelte-5-french-toast@2.0.6:
+    resolution: {integrity: sha512-m3bYOHSoTk1w22OVWwnJLBdA4h1ZyQrh6v9mnh5HbRKQFlnDQw+qzykAyn6fyevdas5HQaYo5sg/gsZmAVzYDg==}
+    peerDependencies:
+      svelte: ^5.0.0
+
   svelte-check@4.3.3:
     resolution: {integrity: sha512-RYP0bEwenDXzfv0P1sKAwjZSlaRyqBn0Fz1TVni58lqyEiqgwztTpmodJrGzP6ZT2aHl4MbTvWP6gbmQ3FOnBg==}
     engines: {node: '>= 18.0.0'}
@@ -1431,6 +1439,11 @@ packages:
     peerDependenciesMeta:
       svelte:
         optional: true
+
+  svelte-writable-derived@3.1.1:
+    resolution: {integrity: sha512-w4LR6/bYZEuCs7SGr+M54oipk/UQKtiMadyOhW0PTwAtJ/Ai12QS77sLngEcfBx2q4H8ZBQucc9ktSA5sUGZWw==}
+    peerDependencies:
+      svelte: ^3.2.1 || ^4.0.0-next.1 || ^5.0.0-next.94
 
   svelte@5.41.1:
     resolution: {integrity: sha512-0a/huwc8e2es+7KFi70esqsReRfRbrT8h1cJSY/+z1lF0yKM6TT+//HYu28Yxstr50H7ifaqZRDGd0KuKDxP7w==}
@@ -2752,6 +2765,11 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
+  svelte-5-french-toast@2.0.6(svelte@5.41.1):
+    dependencies:
+      svelte: 5.41.1
+      svelte-writable-derived: 3.1.1(svelte@5.41.1)
+
   svelte-check@4.3.3(picomatch@4.0.3)(svelte@5.41.1)(typescript@5.9.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
@@ -2773,6 +2791,10 @@ snapshots:
       postcss-scss: 4.0.9(postcss@8.5.6)
       postcss-selector-parser: 7.1.0
     optionalDependencies:
+      svelte: 5.41.1
+
+  svelte-writable-derived@3.1.1(svelte@5.41.1):
+    dependencies:
       svelte: 5.41.1
 
   svelte@5.41.1:
