@@ -10,10 +10,6 @@
 
 	let castes: any[] = $state([]);
 
-	let religionsMap = $derived(Object.fromEntries(data.religions.map((r) => [r._id, r])));
-
-	let castesMap = $derived(Object.fromEntries(castes.map((c) => [c._id, c])));
-
 	const toastStyle = {
 		borderRadius: '200px',
 		background: '#333',
@@ -36,11 +32,6 @@
 			}
 
 			castes = json || [];
-			// if (castes.length > 0) {
-			// 	selectedCasteId = castes[0]._id;
-			// } else {
-			// 	selectedCasteId = null;
-			// }
 		} catch (error: any) {
 			showToast(error.message || 'Something went wrong', '❌');
 		} finally {

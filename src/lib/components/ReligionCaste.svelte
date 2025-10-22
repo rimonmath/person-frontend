@@ -12,6 +12,8 @@
 	$effect(() => {
 		if (castes.length > 0) {
 			selectedCasteId = castes[0]._id;
+		} else {
+			selectedCasteId = '';
 		}
 	});
 
@@ -22,7 +24,7 @@
 	});
 
 	onMount(() => {
-		selectedReligionId = religions.length > 0 ? religions[0]._id : null;
+		selectedReligionId = religions.length > 0 ? religions[0]._id : '';
 	});
 </script>
 
