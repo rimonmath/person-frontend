@@ -77,6 +77,21 @@
 							Persons
 						</a>
 					</li>
+
+					<li
+						class="dashboard__nav-item"
+						aria-current={page.url.pathname === '/dashboard/religion-caste' ? 'page' : undefined}
+					>
+						<a
+							onclick={() => {
+								expanded = !expanded;
+							}}
+							href="/dashboard/religion-caste"
+						>
+							Religion Caste
+						</a>
+					</li>
+
 					<li
 						class="dashboard__nav-item"
 						aria-current={page.url.pathname === '/dashboard/users' ? 'page' : undefined}
