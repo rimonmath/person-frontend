@@ -16,6 +16,8 @@
 
 	import { useDelete } from '$lib/composables/useDelete';
 	import { usePut } from '$lib/composables/usePut';
+	import { putFormData } from '$lib/script/api';
+	import UploadedImage from '$lib/components/UploadedImage.svelte';
 
 	const { showSuccessToast, showErrorToast } = useToast();
 
@@ -110,6 +112,32 @@
 		getPersons();
 	};
 
+	async function changePhoto(e: Event, person: Person) {
+		const file = e.target.files[0];
+
+		if (file) {
+			// console.log(file.size)
+			if (file.size > 8000000) {
+				showErrorToast('File size exceeds 8MB limit');
+				return;
+			}
+
+			const formData = new FormData();
+
+			formData.append('image', file, file.name);
+
+			const { json } = await putFormData(
+				'http://localhost:3123',
+				'api/v1/admin/persons/' + person._id + '/change-image',
+				formData,
+				true
+			);
+
+			getPersons();
+			showSuccessToast(json.message);
+		}
+	}
+
 	onMount(() => {
 		getPersons();
 	});
@@ -138,8 +166,14 @@
 					{#each $persons as person}
 						<tr>
 							<td>
-								{person.first_name}
-								{person.last_name}
+								<div class="flex items-center">
+									<UploadedImage src={person.image} alt="Person Image" maxHeight="50px"
+									></UploadedImage>
+									<span class="ml-2">
+										{person.first_name}
+										{person.last_name}
+									</span>
+								</div>
 							</td>
 							<td>
 								{person.email}
@@ -152,6 +186,17 @@
 							</td>
 							<td>
 								<div class="flex items-center gap-2">
+									<label for="image">
+										Change Image
+										<input
+											type="file"
+											id="image"
+											name="image"
+											placeholder="Image"
+											style="display: none;"
+											onchange={(e) => changePhoto(e, person)}
+										/>
+									</label>
 									<AButton
 										size="sm"
 										color="secondary"

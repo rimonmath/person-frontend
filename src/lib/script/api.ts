@@ -14,6 +14,8 @@ interface SendOptions {
 	data?: any;
 	session?: Session;
 	base: string;
+	formData?: any;
+	withCredentials?: boolean;
 }
 
 async function send({
@@ -21,7 +23,9 @@ async function send({
 	path,
 	data,
 	session,
-	base
+	base,
+	formData,
+	withCredentials
 }: SendOptions): Promise<{ response: Response; json: any }> {
 	const opts: RequestInit = {
 		method,
@@ -29,11 +33,18 @@ async function send({
 	};
 
 	if (data) {
-		prepareRequestBody(opts, data);
+		prepareRequestBody(opts, data, formData);
 	}
 
 	if (session) {
 		attachSessionHeaders(opts.headers as Headers, session);
+	}
+
+	if (withCredentials) {
+		(opts.headers as Headers)?.set(
+			'Authorization',
+			'Bearer ' + localStorage.getItem('accessToken')
+		);
 	}
 
 	const fullPath = encodeURI(`${base}/${path}`);
@@ -62,18 +73,16 @@ async function send({
 /**
  * Helper function to attach request body based on data type
  */
-function prepareRequestBody(opts: RequestInit, data: any) {
+function prepareRequestBody(opts: RequestInit, data: any, formData: any = null) {
 	if (data.creds) {
 		(opts as any).credentials = 'include';
 		delete data.creds;
 	}
 
-	if (!data.type) {
+	if (!formData) {
 		opts.headers = new Headers({ 'Content-Type': 'application/json' });
 		opts.body = JSON.stringify(data);
-	} else if (data.type === 'formData') {
-		const formData = new FormData();
-		formData.append('avatar', data.image[0]);
+	} else {
 		opts.body = formData;
 	}
 }
@@ -105,3 +114,14 @@ export const post = (base: string, path: string, data: unknown, session?: Sessio
 
 export const put = (base: string, path: string, data: unknown, session?: Session) =>
 	send({ method: 'PUT', path, data, session, base });
+
+export const putFormData = (base: string, path: string, formData: any, withCredentials?: boolean) =>
+	send({
+		method: 'PUT',
+		path,
+		data: {},
+		session: undefined,
+		base,
+		formData,
+		withCredentials
+	});
