@@ -3,12 +3,11 @@
 	import { base_endpoint_external } from '$lib/app/env.js';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { API_PATHS } from '$lib/config';
-	import { onMount } from 'svelte';
 	import ReligionCaste from '$lib/components/ReligionCaste.svelte';
 
 	const { data } = $props();
 
-	let castes: any[] = $state([]);
+	let castes: { _id: string; name: string; description: string }[] = $state([]);
 
 	const toastStyle = {
 		borderRadius: '200px',
