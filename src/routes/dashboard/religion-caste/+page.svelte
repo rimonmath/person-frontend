@@ -39,4 +39,5 @@
 	}
 </script>
 
+<Toaster />
 <ReligionCaste religions={data.religions} {castes} onChangeReligion={getCastes} />
