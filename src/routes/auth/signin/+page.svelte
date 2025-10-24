@@ -21,7 +21,7 @@
 		password: ''
 	});
 
-	const { start, error, loading, response } = usePost<SigninResponse>('auth/signin', true);
+	const { start, error, loading, response } = usePost<SigninResponse>('/auth/signin', true);
 
 	async function handleSubmit() {
 		await start(formData);
