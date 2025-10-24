@@ -19,8 +19,9 @@ export function usePost<
 		};
 
 		if (withCredentials) {
-			const token = localStorage.getItem('accessToken');
-			if (token) headers['Authorization'] = `Bearer ${token}`;
+			console.log(withCredentials);
+			// const token = localStorage.getItem('accessToken');
+			// if (token) headers['Authorization'] = `Bearer ${token}`;
 		}
 
 		try {

@@ -15,8 +15,9 @@ export function useGet<TResponse = SuccessResponse>(url: string, withCredentials
 		};
 
 		if (withCredentials) {
-			const token = localStorage.getItem('accessToken');
-			if (token) headers['Authorization'] = `Bearer ${token}`;
+			console.log(withCredentials);
+			// const token = localStorage.getItem('accessToken');
+			// if (token) headers['Authorization'] = `Bearer ${token}`;
 		}
 
 		try {

@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
-import { API_BASE_URL } from '$lib/data';
 import type { ErrorResponse, SuccessResponse } from '$lib/types';
 import { ofetch, type FetchError } from 'ofetch';
+import { api_endpoint } from '$lib/app/env';
 
 export function usePut<
 	TResponse = SuccessResponse,
@@ -19,8 +19,9 @@ export function usePut<
 		};
 
 		if (withCredentials) {
-			const token = localStorage.getItem('accessToken');
-			if (token) headers['Authorization'] = `Bearer ${token}`;
+			console.log(withCredentials);
+			// const token = localStorage.getItem('accessToken');
+			// if (token) headers['Authorization'] = `Bearer ${token}`;
 		}
 
 		try {
@@ -29,7 +30,7 @@ export function usePut<
 			error.set(null);
 			response.set(undefined);
 
-			const result = await ofetch<TResponse>(API_BASE_URL + customUrl, {
+			const result = await ofetch<TResponse>(api_endpoint + customUrl, {
 				method: 'PUT',
 				body: payload,
 				headers

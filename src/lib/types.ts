@@ -21,6 +21,7 @@ export type SigninResponse = SuccessResponse & {
 };
 
 export type Person = {
+	id?: string;
 	_id: string;
 	first_name: string;
 	last_name: string;

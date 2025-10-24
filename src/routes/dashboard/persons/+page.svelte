@@ -20,18 +20,12 @@
 	import UploadedImage from '$lib/components/UploadedImage.svelte';
 	import AddPerson from '$lib/components/persons/AddPerson.svelte';
 	import UpdatePerson from '$lib/components/persons/UpdatePerson.svelte';
+	import { persons } from '../../../stores/persons.js';
 
 	const { showSuccessToast, showErrorToast } = useToast();
 
 	const { data } = $props();
-
-	//=========== Read=============
-	const {
-		start: getPersons,
-		error: getPersonError,
-		loading: getting,
-		response: persons
-	} = useGet<Person[]>('/admin/persons/', true);
+	persons.set(data.persons);
 
 	//=========== Create person =============
 	let newPerson = $state({
@@ -56,7 +50,7 @@
 		loading: adding,
 		response: addResponse,
 		dialog: addDialog
-	} = usePost<SuccessResponse>('/admin/persons/', true);
+	} = usePost<SuccessResponse>('admin/persons/', true);
 
 	const addPerson = async (newPerson: Person) => {
 		await addNewPerson(newPerson);
@@ -84,7 +78,7 @@
 	} = usePut<SuccessResponse>(true);
 
 	const updateSelectedPerson = async () => {
-		await updatePerson($itemToUpdate, `/admin/persons/${$itemToUpdate?._id}`);
+		await updatePerson($itemToUpdate, `admin/persons/${$itemToUpdate?._id}`);
 
 		if ($updateError) {
 			showErrorToast($updateError?.message!);
@@ -93,8 +87,15 @@
 
 		showSuccessToast($updateResponse?.message || '');
 		$updateDialog = false;
-		// getPersons();
+		updatePersonStore($itemToUpdate as Person);
 	};
+
+	// Function to update a person in the store
+	function updatePersonStore(updatedPerson: Person) {
+		persons.update((currentPersons) =>
+			currentPersons.map((person) => (person._id === updatedPerson.id ? updatedPerson : person))
+		);
+	}
 
 	//=========== Delete person =============
 
@@ -108,14 +109,14 @@
 	} = useDelete<SuccessResponse>(true);
 
 	const deleteSelectedPerson = async () => {
-		await deletePerson(`/admin/persons/${$itemToDelete?._id}`);
+		await deletePerson(`admin/persons/${$itemToDelete?._id}`);
 		if ($deleteError) {
 			showErrorToast($deleteError?.message!);
 			return;
 		}
 		showSuccessToast($deleteResponse?.message || '');
 		$deleteDialog = false;
-		getPersons();
+		persons.update(($persons) => $persons.filter((p) => p._id !== $itemToDelete._id));
 	};
 
 	async function changePhoto(e: Event, person: Person) {
@@ -141,14 +142,10 @@
 				true
 			);
 
-			getPersons();
+			// getPersons();
 			showSuccessToast(json.message);
 		}
 	}
-
-	onMount(() => {
-		getPersons();
-	});
 </script>
 
 <div class="p-2 md:p-10">
@@ -156,85 +153,82 @@
 		<h1 class="text-lg">All Persons</h1>
 		<AButton onClick={() => ($addDialog = true)}>Add New</AButton>
 	</div>
-	{#if $getting}
-		<ASpinner></ASpinner>
-	{:else}
-		<div class="table-container">
-			<table>
-				<thead>
+
+	<div class="table-container">
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Gender</th>
+					<th>Address</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each $persons as person}
 					<tr>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Gender</th>
-						<th>Address</th>
-						<th>Actions</th>
+						<td>
+							<div class="flex items-center">
+								<UploadedImage src={person.image} alt="Person Image" maxHeight="50px"
+								></UploadedImage>
+								<span class="ml-2">
+									{person.first_name}
+									{person.last_name}
+								</span>
+							</div>
+						</td>
+						<td>
+							{person.email}
+						</td>
+						<td>
+							{person.gender}
+						</td>
+						<td>
+							{person.address}
+						</td>
+						<td>
+							<div class="flex items-center gap-2">
+								<!-- svelte-ignore a11y_click_events_have_key_events -->
+								<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+								<label onclick={() => ($itemToUpdate = { ...person, id: person._id })}>
+									Change Image
+									<input
+										type="file"
+										placeholder="Image"
+										style="display: none;"
+										onchange={(e) => {
+											changePhoto(e, person);
+										}}
+									/>
+								</label>
+								<AButton
+									size="sm"
+									color="secondary"
+									onClick={() => {
+										$itemToUpdate = { ...person, id: person._id };
+										$updateDialog = true;
+									}}
+								>
+									<EditIcon></EditIcon>
+								</AButton>
+								<AButton
+									size="sm"
+									color="danger"
+									onClick={() => {
+										$itemToDelete = person;
+										$deleteDialog = true;
+									}}
+								>
+									<TrashIcon></TrashIcon>
+								</AButton>
+							</div>
+						</td>
 					</tr>
-				</thead>
-				<tbody>
-					{#each data.persons as person}
-						<tr>
-							<td>
-								<div class="flex items-center">
-									<UploadedImage src={person.image} alt="Person Image" maxHeight="50px"
-									></UploadedImage>
-									<span class="ml-2">
-										{person.first_name}
-										{person.last_name}
-									</span>
-								</div>
-							</td>
-							<td>
-								{person.email}
-							</td>
-							<td>
-								{person.gender}
-							</td>
-							<td>
-								{person.address}
-							</td>
-							<td>
-								<div class="flex items-center gap-2">
-									<!-- svelte-ignore a11y_click_events_have_key_events -->
-									<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-									<label onclick={() => ($itemToUpdate = person)}>
-										Change Image
-										<input
-											type="file"
-											placeholder="Image"
-											style="display: none;"
-											onchange={(e) => {
-												changePhoto(e, person);
-											}}
-										/>
-									</label>
-									<AButton
-										size="sm"
-										color="secondary"
-										onClick={() => {
-											$itemToUpdate = person;
-											$updateDialog = true;
-										}}
-									>
-										<EditIcon></EditIcon>
-									</AButton>
-									<AButton
-										size="sm"
-										color="danger"
-										onClick={() => {
-											$itemToDelete = person;
-											$deleteDialog = true;
-										}}
-									>
-										<TrashIcon></TrashIcon>
-									</AButton>
-								</div>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
-	{/if}
+				{/each}
+			</tbody>
+		</table>
+	</div>
 
 	<ADialog title="Add New Person" bind:value={$addDialog} width="400px">
 		<AddPerson onAddPerson={addPerson} loading={$adding} bind:newPerson></AddPerson>
