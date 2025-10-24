@@ -1,7 +1,6 @@
 import * as api from '$lib/script/api';
 
 import { PRIVATE_API_ENDPOINT } from '$lib/app/env.server.js';
-import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 
@@ -9,7 +8,7 @@ export const PUT = async ({ cookies, request, params }) => {
 	const jwt = cookies.get('jwt');
 	const data = await request.formData();
 
-	console.log(data);
+	// console.log(data);
 
 	// console.log('post data object', data);
 
