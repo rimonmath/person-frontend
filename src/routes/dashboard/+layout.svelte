@@ -8,10 +8,10 @@
 	let { children } = $props();
 
 	function signout() {
-		if (browser) {
-			localStorage.removeItem('accessToken');
-			goto('/auth/signin');
-		}
+		// if (browser) {
+		// 	localStorage.removeItem('accessToken');
+		// 	goto('/auth/signin');
+		// }
 	}
 
 	let authChecked = $state(false);
@@ -24,7 +24,7 @@
 			if (!accessToken) {
 				signout();
 
-				return;
+				// return;
 			}
 		}
 

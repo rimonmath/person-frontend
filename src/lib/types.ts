@@ -12,6 +12,7 @@ export type SuccessResponse = {
 	message: string;
 	redirect?: string;
 	id?: number;
+	result?: any;
 };
 
 export type SigninResponse = SuccessResponse & {

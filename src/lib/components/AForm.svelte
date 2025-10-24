@@ -62,7 +62,7 @@
 		validate();
 
 		if (Object.keys(errors).length > 0) return;
-
+		submittedOnce = false;
 		onSuccessSubmit?.(formData);
 	}
 

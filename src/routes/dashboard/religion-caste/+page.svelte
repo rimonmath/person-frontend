@@ -3,7 +3,7 @@
 	import { base_endpoint_external } from '$lib/app/env.js';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { API_PATHS } from '$lib/config';
-	import ReligionCaste from '$lib/components/ReligionCaste.svelte';
+	import ReligionCaste from '$lib/components/castes/ReligionCaste.svelte';
 
 	const { data } = $props();
 

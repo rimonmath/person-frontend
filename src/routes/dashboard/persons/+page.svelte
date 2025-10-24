@@ -11,15 +11,19 @@
 	import { useGet } from '$lib/composables/useGet';
 	import { useToast } from '$lib/composables/useToast';
 	import { type Person, type SuccessResponse } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { object as zObject, string as zString, email as zEmail, enum as zEnum } from 'zod';
 
 	import { useDelete } from '$lib/composables/useDelete';
 	import { usePut } from '$lib/composables/usePut';
 	import { putFormData } from '$lib/script/api';
 	import UploadedImage from '$lib/components/UploadedImage.svelte';
+	import AddPerson from '$lib/components/persons/AddPerson.svelte';
+	import UpdatePerson from '$lib/components/persons/UpdatePerson.svelte';
 
 	const { showSuccessToast, showErrorToast } = useToast();
+
+	const { data } = $props();
 
 	//=========== Read=============
 	const {
@@ -30,13 +34,21 @@
 	} = useGet<Person[]>('/admin/persons/', true);
 
 	//=========== Create person =============
-	const addPersonSchema = zObject({
-		first_name: zString().min(1, 'First name is required'),
-		last_name: zString().min(1, 'Last name is required'),
-		email: zEmail('Invalid email address'),
-		gender: zEnum(['Male', 'Female', 'Other']),
-		address: zString().min(1, 'Address is required')
+	let newPerson = $state({
+		first_name: '',
+		last_name: '',
+		email: '',
+		gender: '',
+		address: ''
 	});
+
+	function reserNewPerson() {
+		newPerson.first_name = '';
+		newPerson.last_name = '';
+		newPerson.email = '';
+		newPerson.gender = '';
+		newPerson.address = '';
+	}
 
 	const {
 		start: addNewPerson,
@@ -46,15 +58,7 @@
 		dialog: addDialog
 	} = usePost<SuccessResponse>('/admin/persons/', true);
 
-	let newPerson = $state({
-		first_name: '',
-		last_name: '',
-		email: '',
-		gender: '',
-		address: ''
-	});
-
-	const addPerson = async () => {
+	const addPerson = async (newPerson: Person) => {
 		await addNewPerson(newPerson);
 
 		if ($addPersonError) {
@@ -62,9 +66,11 @@
 			return;
 		}
 
-		showSuccessToast($addResponse?.message || '');
+		reserNewPerson();
+		showSuccessToast($addResponse?.message || 'Success');
 		$addDialog = false;
-		getPersons();
+		// getPersons();
+		persons?.update((oldPersons) => [...oldPersons!, $addResponse?.result]);
 	};
 
 	//=========== Update person =============
@@ -87,7 +93,7 @@
 
 		showSuccessToast($updateResponse?.message || '');
 		$updateDialog = false;
-		getPersons();
+		// getPersons();
 	};
 
 	//=========== Delete person =============
@@ -113,6 +119,8 @@
 	};
 
 	async function changePhoto(e: Event, person: Person) {
+		console.log(person);
+
 		const file = e.target.files[0];
 
 		if (file) {
@@ -128,7 +136,7 @@
 
 			const { json } = await putFormData(
 				'http://localhost:3123',
-				'api/v1/admin/persons/' + person._id + '/change-image',
+				'api/v1/admin/persons/' + $itemToUpdate._id + '/change-image',
 				formData,
 				true
 			);
@@ -163,7 +171,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each $persons as person}
+					{#each data.persons as person}
 						<tr>
 							<td>
 								<div class="flex items-center">
@@ -186,15 +194,17 @@
 							</td>
 							<td>
 								<div class="flex items-center gap-2">
-									<label for="image">
+									<!-- svelte-ignore a11y_click_events_have_key_events -->
+									<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+									<label onclick={() => ($itemToUpdate = person)}>
 										Change Image
 										<input
 											type="file"
-											id="image"
-											name="image"
 											placeholder="Image"
 											style="display: none;"
-											onchange={(e) => changePhoto(e, person)}
+											onchange={(e) => {
+												changePhoto(e, person);
+											}}
 										/>
 									</label>
 									<AButton
@@ -227,60 +237,12 @@
 	{/if}
 
 	<ADialog title="Add New Person" bind:value={$addDialog} width="400px">
-		<div>
-			<AForm schema={addPersonSchema} bind:formData={newPerson} onSuccessSubmit={addPerson}>
-				{#snippet children({ errors })}
-					<div class="space-y-2 p-4">
-						<TextInput
-							name="first_name"
-							label="First name"
-							placeholder="Enter first name"
-							bind:formData={newPerson}
-							{errors}
-						></TextInput>
+		<AddPerson onAddPerson={addPerson} loading={$adding} bind:newPerson></AddPerson>
+	</ADialog>
 
-						<TextInput
-							name="last_name"
-							label="Last name"
-							placeholder="Enter last name"
-							bind:formData={newPerson}
-							{errors}
-						></TextInput>
-
-						<TextInput
-							name="email"
-							label="Email"
-							placeholder="Enter Email"
-							bind:formData={newPerson}
-							{errors}
-						></TextInput>
-
-						<SelectInput
-							name="gender"
-							label="Gender"
-							placeholder="--Select Gender--"
-							bind:formData={newPerson}
-							options={[
-								{ label: 'Male', value: 'Male' },
-								{ label: 'Female', value: 'Female' },
-								{ label: 'Other', value: 'Other' }
-							]}
-							{errors}
-						></SelectInput>
-
-						<TextInput
-							name="address"
-							label="Address"
-							placeholder="Enter Address"
-							bind:formData={newPerson}
-							{errors}
-						></TextInput>
-
-						<AButton type="submit" block loading={$adding}>Add</AButton>
-					</div>
-				{/snippet}
-			</AForm>
-		</div>
+	<ADialog title="Update Person" bind:value={$updateDialog} width="400px">
+		<UpdatePerson bind:person={$itemToUpdate} {updateSelectedPerson} loading={$updating}
+		></UpdatePerson>
 	</ADialog>
 
 	<ADialog title="Are you sure?" bind:value={$deleteDialog} width="500px">
@@ -293,67 +255,6 @@
 			<AButton color="primary" onClick={() => ($deleteDialog = false)}>No</AButton>
 
 			<AButton color="danger" onClick={deleteSelectedPerson} loading={$deleting}>Yes</AButton>
-		</div>
-	</ADialog>
-
-	<ADialog title="Update Person" bind:value={$updateDialog} width="400px">
-		<div>
-			<AForm
-				schema={addPersonSchema}
-				bind:formData={$itemToUpdate}
-				onSuccessSubmit={updateSelectedPerson}
-			>
-				{#snippet children({ errors })}
-					<div class="space-y-2 p-4">
-						<TextInput
-							name="first_name"
-							label="First name"
-							placeholder="Enter first name"
-							bind:formData={$itemToUpdate}
-							{errors}
-						></TextInput>
-
-						<TextInput
-							name="last_name"
-							label="Last name"
-							placeholder="Enter last name"
-							bind:formData={$itemToUpdate}
-							{errors}
-						></TextInput>
-
-						<TextInput
-							name="email"
-							label="Email"
-							placeholder="Enter Email"
-							bind:formData={$itemToUpdate}
-							{errors}
-						></TextInput>
-
-						<SelectInput
-							name="gender"
-							label="Gender"
-							placeholder="--Select Gender--"
-							bind:formData={$itemToUpdate}
-							options={[
-								{ label: 'Male', value: 'Male' },
-								{ label: 'Female', value: 'Female' },
-								{ label: 'Other', value: 'Other' }
-							]}
-							{errors}
-						></SelectInput>
-
-						<TextInput
-							name="address"
-							label="Address"
-							placeholder="Enter Address"
-							bind:formData={$itemToUpdate}
-							{errors}
-						></TextInput>
-
-						<AButton type="submit" block loading={$updating}>Save Changes</AButton>
-					</div>
-				{/snippet}
-			</AForm>
 		</div>
 	</ADialog>
 </div>

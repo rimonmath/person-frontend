@@ -54,10 +54,12 @@ async function send({
 	}
 
 	try {
-		console.log('======================full Path', fullPath);
+		// console.log('======================full Path', fullPath);
 
 		const response = await fetch(fullPath, opts);
 		const json = await response.json();
+
+		console.debug('[DEBUG] Response:', response, json);
 
 		if (DEBUG_MODE) {
 			console.debug('[DEBUG] Response:', json);
