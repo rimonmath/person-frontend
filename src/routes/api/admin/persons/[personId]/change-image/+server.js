@@ -5,24 +5,24 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 
-export const POST = async ({ cookies, request }) => {
+export const PUT = async ({ cookies, request, params }) => {
 	const jwt = cookies.get('jwt');
-	const data = await request.json();
+	const data = await request.formData();
+
+	console.log(data);
 
 	// console.log('post data object', data);
 
-	const { response, json } = await api.post(PRIVATE_API_ENDPOINT, `admin/persons`, data, { jwt });
+	const { response, json } = await api.putFormData(
+		PRIVATE_API_ENDPOINT,
+		`admin/persons/${params.personId}/change-image`,
+		data,
+		{ jwt }
+	);
+
+	console.log('json, response.status', json, response.status);
 
 	if (response.status !== 200 && response.status !== 500) {
-		if (json.message) {
-			return new Response(JSON.stringify(json), {
-				status: 400,
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-		}
-
 		throw (
 			response.error || new Error(`Request failed with status ${response.status}, ${json.error}`)
 		);

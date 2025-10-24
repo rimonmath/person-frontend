@@ -34,23 +34,10 @@
 
 		showSuccessToast($response?.message || '');
 
-		// localStorage.setItem('accessToken', $response?.accessToken!);
-		// localStorage.setItem('refreshToken', signinResponse.value!.refreshToken);
-		// console.log('about to go');
-
 		if ($response?.redirect) {
 			goto($response?.redirect);
 		}
 	}
-
-	const autheChecked = $state(false);
-
-	onMount(() => {
-		const accessToken = localStorage.getItem('accessToken');
-		if (accessToken) {
-			goto('/dashboard/persons');
-		}
-	});
 </script>
 
 <div class="text-center">

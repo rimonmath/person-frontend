@@ -2,7 +2,7 @@ import * as api from '$lib/script/api';
 import { base_endpoint_external } from '$lib/app/env.js';
 import { API_PATHS } from '$lib/config';
 
-async function getReligions<T = any>(): Promise<T[]> {
+async function getReligions<T>(): Promise<T[]> {
 	try {
 		const { response, json } = await api.get(base_endpoint_external, API_PATHS.RELIGIONS_EXTERNAL, {
 			aud: 'aud'
@@ -13,6 +13,7 @@ async function getReligions<T = any>(): Promise<T[]> {
 		}
 
 		return json as T[];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
 		console.error(`Error fetching religions: ${error.message}`, error);
 		return [];

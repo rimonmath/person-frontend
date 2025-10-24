@@ -1,18 +1,8 @@
 <script>
-	import { goto } from '$app/navigation';
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import MenuIcon from '$lib/components/icons/MenuIcon.svelte';
 
 	let { children } = $props();
-
-	function signout() {
-		// if (browser) {
-		// 	localStorage.removeItem('accessToken');
-		// 	goto('/auth/signin');
-		// }
-	}
 
 	let expanded = $state(false);
 </script>

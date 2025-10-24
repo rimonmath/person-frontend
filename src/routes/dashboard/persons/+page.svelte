@@ -21,6 +21,7 @@
 	import AddPerson from '$lib/components/persons/AddPerson.svelte';
 	import UpdatePerson from '$lib/components/persons/UpdatePerson.svelte';
 	import { persons } from '../../../stores/persons.js';
+	import { public_api_endpoint } from '$lib/app/env.js';
 
 	const { showSuccessToast, showErrorToast } = useToast();
 
@@ -136,12 +137,12 @@
 			formData.append('image', file, file.name);
 
 			const { json } = await putFormData(
-				'http://localhost:3123',
-				'api/v1/admin/persons/' + $itemToUpdate._id + '/change-image',
-				formData,
-				true
+				public_api_endpoint,
+				'admin/persons/' + $itemToUpdate._id + '/change-image',
+				formData
 			);
 
+			updatePersonStore({ ...json.result, id: json.result._id });
 			// getPersons();
 			showSuccessToast(json.message);
 		}
@@ -191,7 +192,10 @@
 							<div class="flex items-center gap-2">
 								<!-- svelte-ignore a11y_click_events_have_key_events -->
 								<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-								<label onclick={() => ($itemToUpdate = { ...person, id: person._id })}>
+								<label
+									onclick={() => ($itemToUpdate = { ...person, id: person._id })}
+									class="min-w-[133px] rounded-lg border border-gray-300 bg-white px-2 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-100 active:bg-gray-200"
+								>
 									Change Image
 									<input
 										type="file"

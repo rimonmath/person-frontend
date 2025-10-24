@@ -15,7 +15,6 @@ interface SendOptions {
 	session?: Session;
 	base: string;
 	formData?: any;
-	withCredentials?: boolean;
 }
 
 async function send({
@@ -24,8 +23,7 @@ async function send({
 	data,
 	session,
 	base,
-	formData,
-	withCredentials
+	formData
 }: SendOptions): Promise<{ response: Response; json: any }> {
 	const opts: RequestInit = {
 		method,
@@ -40,13 +38,6 @@ async function send({
 		attachSessionHeaders(opts.headers as Headers, session);
 	}
 
-	if (withCredentials) {
-		(opts.headers as Headers)?.set(
-			'Authorization',
-			'Bearer ' + localStorage.getItem('accessToken')
-		);
-	}
-
 	const fullPath = encodeURI(`${base}/${path}`);
 
 	if (DEBUG_MODE) {
@@ -59,7 +50,7 @@ async function send({
 		const response = await fetch(fullPath, opts);
 		const json = await response.json();
 
-		console.debug('[DEBUG] Response:', response, json);
+		// console.debug('[DEBUG] Response:', response, json);
 
 		if (DEBUG_MODE) {
 			console.debug('[DEBUG] Response:', json);
@@ -117,13 +108,12 @@ export const post = (base: string, path: string, data: unknown, session?: Sessio
 export const put = (base: string, path: string, data: unknown, session?: Session) =>
 	send({ method: 'PUT', path, data, session, base });
 
-export const putFormData = (base: string, path: string, formData: any, withCredentials?: boolean) =>
+export const putFormData = (base: string, path: string, formData: any, session?: Session) =>
 	send({
 		method: 'PUT',
 		path,
 		data: {},
-		session: undefined,
+		session: session,
 		base,
-		formData,
-		withCredentials
+		formData
 	});

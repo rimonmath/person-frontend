@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { ErrorResponse, SuccessResponse } from '$lib/types';
 import { ofetch, type FetchError } from 'ofetch';
 
-import { api_endpoint } from '$lib/app/env';
+import { public_api_endpoint } from '$lib/app/env';
 
 export function usePost<
 	TResponse = SuccessResponse,
@@ -30,7 +30,7 @@ export function usePost<
 			error.set(null);
 			response.set(undefined);
 
-			const result = await ofetch<TResponse>(api_endpoint + (customUrl ?? url), {
+			const result = await ofetch<TResponse>(public_api_endpoint + (customUrl ?? url), {
 				method: 'POST',
 				body: payload,
 				headers

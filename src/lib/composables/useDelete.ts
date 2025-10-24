@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { ErrorResponse, SuccessResponse } from '$lib/types';
 import { ofetch, type FetchError } from 'ofetch';
-import { api_endpoint } from '$lib/app/env';
+import { public_api_endpoint } from '$lib/app/env';
 
 export function useDelete<TResponse = SuccessResponse>(withCredentials = false) {
 	const loading = writable(false);
@@ -27,7 +27,7 @@ export function useDelete<TResponse = SuccessResponse>(withCredentials = false) 
 			error.set(null);
 			response.set(undefined);
 
-			const result = await ofetch<TResponse>(api_endpoint + customUrl, {
+			const result = await ofetch<TResponse>(public_api_endpoint + customUrl, {
 				method: 'DELETE',
 				body: {},
 				headers
