@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as api from '$lib/script/api';
-	import { base_endpoint_external } from '$lib/app/env.js';
+	import { api_endpoint } from '$lib/app/env.js';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { API_PATHS } from '$lib/config';
 	import ReligionCaste from '$lib/components/castes/ReligionCaste.svelte';
@@ -22,8 +22,8 @@
 	async function getCastes(selectedReligionId: string) {
 		try {
 			const { response, json } = await api.get(
-				base_endpoint_external,
-				`${API_PATHS.CASTES_EXTERNAL}/${selectedReligionId}`
+				api_endpoint,
+				`${API_PATHS.CASTE}/${selectedReligionId}`
 			);
 
 			if (!response.ok) {

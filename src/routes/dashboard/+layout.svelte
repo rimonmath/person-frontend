@@ -14,108 +14,75 @@
 		// }
 	}
 
-	let authChecked = $state(false);
-
 	let expanded = $state(false);
-
-	onMount(() => {
-		if (browser) {
-			const accessToken = localStorage.getItem('accessToken');
-			if (!accessToken) {
-				signout();
-
-				// return;
-			}
-		}
-
-		authChecked = true;
-	});
 </script>
 
-{#if authChecked}
-	<div class="dashboard">
-		<div class="dashboard__top">
-			<div class="flex items-center p-4">
-				<button
-					class="dashboard__nav-icon mr-2 w-[30px] px-2 py-2"
-					onclick={() => {
-						expanded = !expanded;
-					}}
-				>
-					<MenuIcon></MenuIcon>
-				</button>
+<div class="dashboard">
+	<div class="dashboard__top">
+		<div class="flex items-center p-4">
+			<button
+				class="dashboard__nav-icon mr-2 w-[30px] px-2 py-2"
+				onclick={() => {
+					expanded = !expanded;
+				}}
+			>
+				<MenuIcon></MenuIcon>
+			</button>
 
-				<a href="/">
-					<div class="flex items-center">
-						<img src="/favicon.svg" class="max-h-[33px]" alt="" />
-						<div class="dashboard__logo-text ml-2 hidden md:inline-block">Person Manager</div>
-					</div>
-				</a>
-			</div>
+			<a href="/">
+				<div class="flex items-center">
+					<img src="/favicon.svg" class="max-h-[33px]" alt="" />
+					<div class="dashboard__logo-text ml-2 hidden md:inline-block">Person Manager</div>
+				</div>
+			</a>
+		</div>
 
-			<div class="px-2">
-				<div class="flex items-center space-x-2">
-					<div class="ml-2">
-						<button class="cursor-pointer" onclick={signout}> Sign out </button>
-					</div>
+		<div class="px-2">
+			<div class="flex items-center space-x-2">
+				<div class="ml-2">
+					<a class="cursor-pointer" href="/auth/signout"> Sign out </a>
 				</div>
 			</div>
 		</div>
-		<div class="dashboard__bottom">
-			<div class="dashboard__left" class:dashboard__left--expanded={expanded}>
-				<ul class="dashboard__nav">
-					<li
-						class="dashboard__nav-item"
-						aria-current={page.url.pathname === '/dashboard/persons' ? 'page' : undefined}
-					>
-						<a
-							onclick={() => {
-								expanded = !expanded;
-							}}
-							href="/dashboard/persons"
-						>
-							Persons
-						</a>
-					</li>
-
-					<li
-						class="dashboard__nav-item"
-						aria-current={page.url.pathname === '/dashboard/religion-caste' ? 'page' : undefined}
-					>
-						<a
-							onclick={() => {
-								expanded = !expanded;
-							}}
-							href="/dashboard/religion-caste"
-						>
-							Religion Caste
-						</a>
-					</li>
-
-					<li
-						class="dashboard__nav-item"
-						aria-current={page.url.pathname === '/dashboard/users' ? 'page' : undefined}
-					>
-						<a
-							onclick={() => {
-								expanded = !expanded;
-							}}
-							href="/dashboard/users"
-						>
-							Users
-						</a>
-					</li>
-				</ul>
-			</div>
-			<div class="dashboard__middle">
-				{@render children()}
-			</div>
-			<div class="dashboard__right"></div>
-		</div>
 	</div>
-{:else}
-	<div class="flex items-center justify-center">Loading...</div>
-{/if}
+	<div class="dashboard__bottom">
+		<div class="dashboard__left" class:dashboard__left--expanded={expanded}>
+			<ul class="dashboard__nav">
+				<li
+					class="dashboard__nav-item"
+					aria-current={page.url.pathname === '/dashboard/persons' ? 'page' : undefined}
+				>
+					<a
+						onclick={() => {
+							expanded = !expanded;
+						}}
+						href="/dashboard/persons"
+					>
+						Persons
+					</a>
+				</li>
+
+				<li
+					class="dashboard__nav-item"
+					aria-current={page.url.pathname === '/dashboard/religion-caste' ? 'page' : undefined}
+				>
+					<a
+						onclick={() => {
+							expanded = !expanded;
+						}}
+						href="/dashboard/religion-caste"
+					>
+						Religion Caste
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="dashboard__middle">
+			{@render children()}
+		</div>
+		<div class="dashboard__right"></div>
+	</div>
+</div>
 
 <style>
 	.dashboard {

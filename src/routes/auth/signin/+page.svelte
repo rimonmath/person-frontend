@@ -32,18 +32,14 @@
 			return;
 		}
 
-		console.log(response);
-		console.log($response);
-
 		showSuccessToast($response?.message || '');
 
 		// localStorage.setItem('accessToken', $response?.accessToken!);
 		// localStorage.setItem('refreshToken', signinResponse.value!.refreshToken);
-		console.log('about to go');
+		// console.log('about to go');
 
 		if ($response?.redirect) {
 			goto($response?.redirect);
-			console.log('GOne');
 		}
 	}
 

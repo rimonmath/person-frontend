@@ -50,7 +50,7 @@
 		loading: adding,
 		response: addResponse,
 		dialog: addDialog
-	} = usePost<SuccessResponse>('admin/persons/', true);
+	} = usePost<SuccessResponse>('/admin/persons/', true);
 
 	const addPerson = async (newPerson: Person) => {
 		await addNewPerson(newPerson);
@@ -78,7 +78,7 @@
 	} = usePut<SuccessResponse>(true);
 
 	const updateSelectedPerson = async () => {
-		await updatePerson($itemToUpdate, `admin/persons/${$itemToUpdate?._id}`);
+		await updatePerson($itemToUpdate, `/admin/persons/${$itemToUpdate?._id}`);
 
 		if ($updateError) {
 			showErrorToast($updateError?.message!);
@@ -109,7 +109,7 @@
 	} = useDelete<SuccessResponse>(true);
 
 	const deleteSelectedPerson = async () => {
-		await deletePerson(`admin/persons/${$itemToDelete?._id}`);
+		await deletePerson(`/admin/persons/${$itemToDelete?._id}`);
 		if ($deleteError) {
 			showErrorToast($deleteError?.message!);
 			return;
