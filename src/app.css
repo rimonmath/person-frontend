@@ -136,7 +136,7 @@ tbody tr:hover {
 /* Table cells */
 td {
 	padding: 10px 15px;
-	color: #334155; /* slightly dark text */
+	color: #000; /* slightly dark text */
 }
 
 /* Responsive */

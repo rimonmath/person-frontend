@@ -160,6 +160,7 @@
 			<thead>
 				<tr>
 					<th>Name</th>
+					<th>Image</th>
 					<th>Email</th>
 					<th>Gender</th>
 					<th>Address</th>
@@ -171,13 +172,14 @@
 					<tr>
 						<td>
 							<div class="flex items-center">
-								<UploadedImage src={person.image} alt="Person Image" maxHeight="50px"
-								></UploadedImage>
 								<span class="ml-2">
 									{person.first_name}
 									{person.last_name}
 								</span>
 							</div>
+						</td>
+						<td>
+							<UploadedImage src={person.image} alt="Person Image" maxHeight="50px"></UploadedImage>
 						</td>
 						<td>
 							{person.email}
