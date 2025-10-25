@@ -21,7 +21,7 @@
 	import AddPerson from '$lib/components/persons/AddPerson.svelte';
 	import UpdatePerson from '$lib/components/persons/UpdatePerson.svelte';
 	import { persons } from '../../../stores/persons.js';
-	import { public_api_endpoint } from '$lib/app/env.js';
+	import { public_api_endpoint } from '$lib/app/env.public.js';
 
 	const { showSuccessToast, showErrorToast } = useToast();
 

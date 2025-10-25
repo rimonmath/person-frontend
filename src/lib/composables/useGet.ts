@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
-import { API_BASE_URL } from '$lib/data';
 import type { ErrorResponse, SuccessResponse } from '$lib/types';
 import { ofetch, type FetchError } from 'ofetch';
+import { public_api_endpoint } from '$lib/app/env.public';
 
 export function useGet<TResponse = SuccessResponse>(url: string, withCredentials = false) {
 	const loading = writable(false);
@@ -26,7 +26,7 @@ export function useGet<TResponse = SuccessResponse>(url: string, withCredentials
 			error.set(null);
 			response.set(undefined);
 
-			const result = await ofetch<TResponse>(API_BASE_URL + (customUrl ?? url), {
+			const result = await ofetch<TResponse>(public_api_endpoint + (customUrl ?? url), {
 				method: 'GET',
 				headers
 			});

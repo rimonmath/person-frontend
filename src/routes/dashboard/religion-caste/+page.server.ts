@@ -1,12 +1,16 @@
 import * as api from '$lib/script/api';
-import { base_endpoint_external } from '$lib/app/env.js';
 import { API_PATHS } from '$lib/config';
+import { PRIVATE_API_ENDPOINT_EXTERNAL } from '$lib/app/env.private';
 
 async function getReligions<T>(): Promise<T[]> {
 	try {
-		const { response, json } = await api.get(base_endpoint_external, API_PATHS.RELIGIONS_EXTERNAL, {
-			aud: 'aud'
-		});
+		const { response, json } = await api.get(
+			PRIVATE_API_ENDPOINT_EXTERNAL,
+			API_PATHS.RELIGIONS_EXTERNAL,
+			{
+				aud: 'aud'
+			}
+		);
 
 		if (!response.ok || !Array.isArray(json)) {
 			return [];

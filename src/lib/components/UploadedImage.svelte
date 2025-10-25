@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { API_DOMAIN } from '$lib/data';
+	import { public_cdn_domain } from '$lib/app/env.public';
 
 	type Props = {
 		src: string;
@@ -9,7 +9,7 @@
 
 	let { src, alt, maxHeight = 'auto' }: Props = $props();
 
-	let imageSrc = $derived.by(() => (src ? API_DOMAIN + src : '/img/user-avatar.jpg'));
+	let imageSrc = $derived.by(() => (src ? public_cdn_domain + src : '/img/user-avatar.jpg'));
 </script>
 
 <!-- {JSON.stringify(imageSrc)} -->

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as api from '$lib/script/api';
-	import { public_api_endpoint } from '$lib/app/env.js';
+	import { public_api_endpoint } from '$lib/app/env.public.js';
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { API_PATHS } from '$lib/config';
 	import ReligionCaste from '$lib/components/castes/ReligionCaste.svelte';

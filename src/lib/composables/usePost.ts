@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { ErrorResponse, SuccessResponse } from '$lib/types';
 import { ofetch, type FetchError } from 'ofetch';
 
-import { public_api_endpoint } from '$lib/app/env';
+import { public_api_endpoint } from '$lib/app/env.public';
 
 export function usePost<
 	TResponse = SuccessResponse,
