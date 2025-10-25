@@ -9,7 +9,7 @@
 
 	let { src, alt, maxHeight = 'auto' }: Props = $props();
 
-	let imageSrc = $derived.by(() => (src ? public_cdn_domain + src : '/img/user-avatar.jpg'));
+	let imageSrc = $derived(src ? public_cdn_domain + src : '/img/user-avatar.jpg');
 </script>
 
 <!-- {JSON.stringify(imageSrc)} -->

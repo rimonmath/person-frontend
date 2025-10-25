@@ -28,6 +28,7 @@ export type Person = {
 	email: string;
 	gender: 'Male' | 'Female' | 'Other';
 	address: string;
+	image: string;
 };
 
 export type User = {

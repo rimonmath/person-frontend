@@ -1,11 +1,10 @@
 import * as api from '$lib/script/api';
 
 import { PRIVATE_API_ENDPOINT } from '$lib/app/env.private.js';
-import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 
-export const POST = async ({ cookies, request, locals }) => {
+export const POST = async ({ cookies, request }) => {
 	// const jwt = cookies.get('jwt');
 	const data = await request.json();
 

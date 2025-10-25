@@ -1,7 +1,6 @@
 import * as api from '$lib/script/api';
 
 import { PRIVATE_API_ENDPOINT } from '$lib/app/env.private.js';
-import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 
@@ -9,16 +8,12 @@ export const PUT = async ({ cookies, request, params }) => {
 	const jwt = cookies.get('jwt');
 	const data = await request.json();
 
-	// console.log('post data object', data);
-
 	const { response, json } = await api.put(
 		PRIVATE_API_ENDPOINT,
 		`admin/persons/${params.personId}`,
 		data,
 		{ jwt }
 	);
-
-	// console.log('json, response.status', json, response.status);
 
 	if (response.status !== 200 && response.status !== 500) {
 		throw (
@@ -37,8 +32,6 @@ export const PUT = async ({ cookies, request, params }) => {
 export const DELETE = async ({ cookies, request, params }) => {
 	const jwt = cookies.get('jwt');
 	const data = await request.json();
-
-	// console.log('post data object', data);
 
 	const { response, json } = await api.del(
 		PRIVATE_API_ENDPOINT,

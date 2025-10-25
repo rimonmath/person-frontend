@@ -8,10 +8,6 @@ export const PUT = async ({ cookies, request, params }) => {
 	const jwt = cookies.get('jwt');
 	const data = await request.formData();
 
-	// console.log(data);
-
-	// console.log('post data object', data);
-
 	const { response, json } = await api.putFormData(
 		PRIVATE_API_ENDPOINT,
 		`admin/persons/${params.personId}/change-image`,
