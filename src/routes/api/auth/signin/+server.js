@@ -15,6 +15,15 @@ export const POST = async ({ cookies, request }) => {
 	// console.log('json, response.status', json, response.status);
 
 	if (response.status !== 200 && response.status !== 500) {
+		if (json.message) {
+			return new Response(JSON.stringify(json), {
+				status: 400,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+		}
+
 		throw (
 			response.error || new Error(`Request failed with status ${response.status}, ${json.error}`)
 		);
