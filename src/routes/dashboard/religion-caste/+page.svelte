@@ -4,20 +4,13 @@
 	import toast, { Toaster } from 'svelte-5-french-toast';
 	import { API_PATHS } from '$lib/config';
 	import ReligionCaste from '$lib/components/castes/ReligionCaste.svelte';
+	import { useToast } from '$lib/composables/useToast.js';
+
+	const { showErrorToast } = useToast();
 
 	const { data } = $props();
 
 	let castes: { _id: string; name: string; description: string }[] = $state([]);
-
-	const toastStyle = {
-		borderRadius: '200px',
-		background: '#333',
-		color: '#fff'
-	};
-
-	function showToast(message: string, icon = '👏') {
-		toast(message, { icon, style: toastStyle });
-	}
 
 	async function getCastes(selectedReligionId: string) {
 		try {
@@ -32,7 +25,7 @@
 
 			castes = json || [];
 		} catch (error: any) {
-			showToast(error.message || 'Something went wrong', '❌');
+			showErrorToast(error.message || 'Something went wrong');
 		} finally {
 		}
 	}

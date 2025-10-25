@@ -17,7 +17,6 @@ async function getReligions<T>(): Promise<T[]> {
 		}
 
 		return json as T[];
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
 		console.error(`Error fetching religions: ${error.message}`, error);
 		return [];
@@ -25,9 +24,6 @@ async function getReligions<T>(): Promise<T[]> {
 }
 
 export const load = async () => {
-	// define Religion type if you have one, for example:
-	// interface Religion { id: number; name: string; }
-
 	const religions = await getReligions<{ _id: string; name: string }>();
 
 	console.log('Religions fetched:', religions);
